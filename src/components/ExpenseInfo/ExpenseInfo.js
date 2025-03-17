@@ -1,13 +1,14 @@
 import React from "react";
 import styles from "./ExpenseInfo.module.css";
 
-const ExpenseInfo = (props) => {
+const ExpenseInfo = ({expenses}) => {
+  console.log("expense", expenses);
  
-  const totalBalance = props.expenses.reduce((acc, item) => acc + item.amount, 0);
-  const totalIncome = props.expenses
+  const totalBalance = expenses.reduce((acc, item) => acc + item.amount, 0);
+  const totalIncome = expenses
     .filter((item) => item.amount > 0)
     .reduce((acc, item) => acc + item.amount, 0);
-  const totalExpense = props.expenses
+  const totalExpense = expenses
     .filter((item) => item.amount < 0)
     .reduce((acc, item) => acc + item.amount, 0);
 

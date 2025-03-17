@@ -1,9 +1,18 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import styles from "./ExpenseForm.module.css";
 
-const ExpenseForm = (props) => {
+const ExpenseForm = ({addExpense, updateExpense, editExpenses}) => {
   const expenseTextInput = useRef();
   const expenseAmountInput = useRef();
+
+
+  useEffect(() => {
+    if(editExpenses){
+      expenseTextInput.current.value = editExpenses.text;
+
+      expenseAmountInput.current.value =  editExpenses.amount;
+    }
+  }, [editExpenses])
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -11,21 +20,27 @@ const ExpenseForm = (props) => {
 
     const enteredText = expenseTextInput.current.value;
     const enteredAmount  = parseFloat(expenseAmountInput.current.value);
-    console.log('id', new Date().getTime());
+    // console.log('id', new Date().getTime());
+   
     const newexpense = {
-      id: new Date().getTime(),
+      id:  editExpenses ? editExpenses.id : new Date().getTime(),
       text : enteredText,
       amount : enteredAmount
     }
-    console.log('newexpense', newexpense);
-    props.addExpense(newexpense);
+    // console.log('newexpense', newexpense);
+    if(editExpenses){
+      updateExpense(newexpense);
+    }else{
+      addExpense(newexpense);
+    }
+   
     expenseTextInput.current.value = "";
     expenseAmountInput.current.value = "";
   };
 
   return (
     <form className={styles.form} onSubmit={onSubmitHandler}>
-      <h3>Add new transaction</h3>
+      <h3>{editExpenses ? "edit new transaction" : "Add new transaction"}</h3>
       <label htmlFor="expenseText">Text</label>
       <input
         id="expenseText"
@@ -47,7 +62,7 @@ const ExpenseForm = (props) => {
         required
         ref={expenseAmountInput}
       />
-      <button className={styles.submitBtn}>Add Transaction</button>
+      <button className={styles.submitBtn}>{editExpenses ? "edit transaction" : "Add Transaction"}</button>
     </form>
   );
 };
